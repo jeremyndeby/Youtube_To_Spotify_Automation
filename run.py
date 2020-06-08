@@ -20,10 +20,11 @@ def run():
 
     # 2. Select the Youtube playlists we want the music videos from
     choices = list(map(int, input("Enter the indexes of the different playlists to select: ").split())) # separated by a space
-    print("List of playlists: {}".format(choices))
+    print("List of Youtube playlists indexes entered: {}".format(choices))
 
     # 3. Define the name of the Spotify playlist to create
     spotify_playlist_name = input("Define the name of the Spotify playlist to create: ") # Tracks from Youtube Playlists
+    print("You created a new Spotify playlist named '{}'".format(spotify_playlist_name))
 
     # 4. For each video in each playlist selected, get the track information from Youtube
     # and search the track in spotify thanks to its uri
@@ -43,7 +44,8 @@ def run():
 
     # 5. If we found the track, add it to to the new Spotify playlist
     added_tracks = spotify_client.add_tracks_to_spotify_playlist(spotify_playlist_name, spotify_track_uris)
-    print(added_tracks)
+    if added_tracks:
+        print("Tracks added successfully to your new Spotify playlist '{}'!".format(spotify_playlist_name))
 
 
 if __name__ == '__main__':

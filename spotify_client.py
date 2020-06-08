@@ -2,6 +2,16 @@ import json
 import requests
 import urllib.parse
 
+
+class ResponseException(Exception):
+    def __init__(self, status_code, message=""):
+        self.message = message
+        self.status_code = status_code
+
+    def __str__(self):
+        return self.message + f"Response gave status code {self.status_code}"
+
+
 class SpotifyClient(object):
     def __init__(self, spotify_token, spotify_user_id):
         self.spotify_token = spotify_token
@@ -72,6 +82,9 @@ class SpotifyClient(object):
             }
         )
 
-        response_json = response.json()
+        # check for valid response status
+        if response.status_code != 200:
+            raise ResponseException(response.status_code)
 
+        response_json = response.json()
         return response_json

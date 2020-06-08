@@ -4,6 +4,10 @@ import google_auth_oauthlib.flow
 import googleapiclient.discovery
 import youtube_dl
 
+# Words to delete from the fetched title name from Youtube
+IGNORE = ['(', '[', ' x', ')', ']', '&', 'lyrics', 'lyric',
+          'video', 'official' '/', ' proximity', ' ft', '.', ' edit', ' feat', ' vs', ',']
+
 
 class Playlist(object):
     def __init__(self, id, title):
