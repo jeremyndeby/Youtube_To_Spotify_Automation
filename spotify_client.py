@@ -7,10 +7,12 @@ class SpotifyClient(object):
         self.spotify_token = spotify_token
         self.spotify_user_id = spotify_user_id
 
-    def create_playlist(self):
+    def create_playlist(self, spotify_playlist_name):
         """Create A New Playlist"""
+
+
         request_body = json.dumps({
-            "name": "Test3",  # Tracks from Youtube Playlists
+            "name": spotify_playlist_name,  # Tracks from Youtube Playlists
             "public": True,
             "collaborative": False
         })
@@ -51,11 +53,11 @@ class SpotifyClient(object):
             print("No song found for {} - {}".format(artist, track_name))
 
 
-    def add_tracks_to_spotify_playlist(self, uris):
+    def add_tracks_to_spotify_playlist(self, spotify_playlist_name, uris):
         """Add all tracks from the selected Youtube playlists to a new Spotify playlist"""
 
         # create a new playlist
-        playlist_id = self.create_playlist()
+        playlist_id = self.create_playlist(spotify_playlist_name)
 
         # add all songs into new playlist
         request_data = json.dumps(uris)
