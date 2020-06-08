@@ -3,15 +3,6 @@ import requests
 import urllib.parse
 
 
-class ResponseException(Exception):
-    def __init__(self, status_code, message=""):
-        self.message = message
-        self.status_code = status_code
-
-    def __str__(self):
-        return self.message + f"Response gave status code {self.status_code}"
-
-
 class SpotifyClient(object):
     def __init__(self, spotify_token, spotify_user_id):
         self.spotify_token = spotify_token
@@ -19,8 +10,6 @@ class SpotifyClient(object):
 
     def create_playlist(self, spotify_playlist_name):
         """Create A New Playlist"""
-
-
         request_body = json.dumps({
             "name": spotify_playlist_name,  # Tracks from Youtube Playlists
             "public": True,
@@ -29,7 +18,8 @@ class SpotifyClient(object):
 
         query = "https://api.spotify.com/v1/users/{}/playlists".format(self.spotify_user_id)
         response = requests.post(query, data=request_body, headers={"Content-Type": "application/json",
-                                                                    "Authorization": "Bearer {}".format(self.spotify_token)}
+                                                                    "Authorization": "Bearer {}".format(
+                                                                        self.spotify_token)}
                                  )
 
         response_json = response.json()
@@ -61,7 +51,6 @@ class SpotifyClient(object):
             # raise Exception(f"No song found for {artist} = {track_name}")
             print("No song found for {} - {}".format(artist, track_name))
 
-
     def add_tracks_to_spotify_playlist(self, spotify_playlist_name, uris):
         """Add all tracks from the selected Youtube playlists to a new Spotify playlist"""
 
@@ -81,10 +70,6 @@ class SpotifyClient(object):
                 "Authorization": "Bearer {}".format(self.spotify_token)
             }
         )
-
-        # check for valid response status
-        if response.status_code != 200:
-            raise ResponseException(response.status_code)
 
         response_json = response.json()
         return response_json

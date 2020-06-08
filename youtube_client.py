@@ -20,7 +20,7 @@ class Track(object):
         self.artist = artist
         self.track_name = track_name
         self.youtube_url = youtube_url
-        #self.spotify_uri = spotify_uri
+        # self.spotify_uri = spotify_uri
 
 
 class YouTubeClient(object):
@@ -47,7 +47,7 @@ class YouTubeClient(object):
     def get_playlists(self):
         request = self.youtube_client.playlists().list(
             part="id, snippet",
-            maxResults=100, #maximum number of playlists
+            maxResults=100,  # maximum number of playlists
             mine=True
         )
         response = request.execute()
@@ -75,14 +75,28 @@ class YouTubeClient(object):
             video = youtube_dl.YoutubeDL({'quiet': True}).extract_info(youtube_url, download=False)
 
             # Save information
+            full_title = video['title']
             artist = video['artist']
             track_name = video['track']
 
-            # Add the uri: easy to get track to put into a playlist
-            #"spotify_uri": self.get_spotify_url(track_name, artist)
+            # If no artist or track name use the title of the track
+            if artist is None and track_name is None and full_title:
+                artist = (full_title.rsplit('-')[0]).strip()
+                track_name = (full_title.rsplit('-')[1]).strip()
 
             if artist and track_name:
-                tracks.append(Track(artist, track_name, youtube_url))
+                # Clean the information
+                artist = artist.lower()
+                for ch in IGNORE:
+                    if ch in artist:
+                        artist = artist.replace(ch, '')
 
+                track_name = track_name.lower()
+                for ch in IGNORE:
+                    if ch in track_name:
+                        track_name = track_name.replace(ch, '')
+
+                # Save the information
+                tracks.append(Track(artist, track_name, youtube_url))
 
         return tracks
