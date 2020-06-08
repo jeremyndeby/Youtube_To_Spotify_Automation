@@ -3,7 +3,7 @@ from youtube_client import YouTubeClient
 from spotify_client import SpotifyClient
 # from spotify_client_secret_token import spotify_token,spotify_user_id
 
-spotify_token = "BQD4XQHNoWMGfwrVyoKWc8a_EHxK_R9bD9c9TwaeKG4Ukr37qUklN5ag5yTVtx-WMaAZIGiZhskVpaRlTh45pX0scAIc66mXtMLRVeQdP9nEnj1NloMTaKUCi9Rqq7PKKh7M3IUlye_-4iiiK-04h6RAhhqyEtQeBBpcYI2osm8hR_FxPfMxEll8obf8mTDvcvaYqCAcauUsISs"
+spotify_token = "BQCMk3Mki-zc27L3UYrG8VGAUbOFe6t1Dni9tiBVEVzhnWXqpwOj6sfnJGEFPvSnjP3nKDoO_g_v54g6513ZoNO7G5YMKA3xuzl6RNBRowH1ddAjMTJiwRtOFX2Xp3lI9dUkHA6Rh7duba05kWBRWPRjbCFlszohMpsnlwp9NTMpJ29L4OdhHVzatWHvjZJeTJ-CHMrcTBB1A3s"
 spotify_user_id = '1114332950'
 
 # from spotify_client import SpotifyClient
@@ -17,27 +17,31 @@ def run():
 
     for index, playlist in enumerate(playlists):
         print("{}: {}".format(index, playlist.title))
+
+    # 2. Select the Youtube playlists we want the music videos from
     choices = list(map(int, input("Enter the indexes of the different playlists to select: ").split())) # separated by a space
     print("List of playlists: {}".format(choices))
 
+    # 3. Define the name of the Spotify playlist to create
     spotify_playlist_name = input("Define the name of the Spotify playlist to create: ") # Tracks from Youtube Playlists
 
+    # 4. For each video in each playlist selected, get the track information from Youtube
+    # and search the track in spotify thanks to its uri
     spotify_track_uris = []
     for choice in choices:
         chosen_playlist = playlists[choice]
         print("You selected the playlist '{}'".format(chosen_playlist.title))
-
         songs = youtube_client.get_music_videos_from_playlist(chosen_playlist.id)
 
         print("Attempting to add {} tracks from '{}'".format(len(songs), chosen_playlist.title))
 
         for song in songs:
-            print(song.artist, '|', song.track_name)
             spotify_track_uri = spotify_client.search_spotify_tracks_uri(song.artist, song.track_name)
             if spotify_track_uri:
                 # create a list of all uris
                 spotify_track_uris.append(spotify_track_uri)
 
+    # 5. If we found the track, add it to to the new Spotify playlist
     added_tracks = spotify_client.add_tracks_to_spotify_playlist(spotify_playlist_name, spotify_track_uris)
     print(added_tracks)
 

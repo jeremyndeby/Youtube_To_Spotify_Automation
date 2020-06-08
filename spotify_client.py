@@ -23,7 +23,6 @@ class SpotifyClient(object):
                                  )
 
         response_json = response.json()
-        print(response_json)
 
         # playlist id
         playlist_id = response_json["id"]
