@@ -73,18 +73,24 @@ class YouTubeClient(object):
             video_id = item['snippet']['resourceId']['videoId']
 
             # Use youtube_dl to collect the track and artist name
-            youtube_url = "https://www.youtube.com/watch?v={}".format(video_id)
-            video = youtube_dl.YoutubeDL({'quiet': True}).extract_info(youtube_url, download=False)
+            try:
+                youtube_url = "https://www.youtube.com/watch?v={}".format(video_id)
+                video = youtube_dl.YoutubeDL({'quiet': True}).extract_info(youtube_url, download=False)
 
-            # Save information
-            full_title = video['title']
-            artist = video['artist']
-            track_name = video['track']
+                # Save information
+                full_title = video['title']
+                artist = video['artist']
+                track_name = video['track']
+            except:
+                continue
 
             # If no artist or track name use the title of the track
             if artist is None and track_name is None and full_title:
-                artist = (full_title.rsplit('-')[0]).strip()
-                track_name = (full_title.rsplit('-')[1]).strip()
+                try:
+                    artist = (full_title.rsplit('-')[0]).strip()
+                    track_name = (full_title.rsplit('-')[1]).strip()
+                except:
+                    continue
 
             if artist and track_name:
                 # Clean the information

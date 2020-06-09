@@ -51,7 +51,8 @@ class SpotifyClient(object):
         # create a new playlist
         playlist_id = self.create_playlist(spotify_playlist_name)
 
-        # add all tracks to the new playlist
-        results = self.spotify_client.user_playlist_add_tracks(self.spotify_user_id, playlist_id, uris)
-
+        # add all tracks to the new playlist (Note: You can add a maximum of 100 tracks per request.)
+        while uris:
+            results = self.spotify_client.user_playlist_add_tracks(self.spotify_user_id, playlist_id, uris[:100])
+            uris = uris[100:]
         return results
