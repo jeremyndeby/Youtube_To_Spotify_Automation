@@ -1,20 +1,21 @@
-import os
+from credentials import spotify_user_id
+from credentials import spotify_client_id
+from credentials import spotify_client_secret
+from credentials import spotify_scope
+from credentials import spotify_redirect_url
+
 from youtube_client import YouTubeClient
 from spotify_client import SpotifyClient
-# from spotify_client_secret_token import spotify_token,spotify_user_id
 
-spotify_token = "BQAbohdeebmQFuZWRg-1PMUfnBI4gR-4hI_VFOPw9omegCyMPcbAASwXhDmnHuPqpVPikBK-Idi41iXKb_hS4v-pIJU-WqAlgwcTmC1TPKVbmnOfHALa32kO-R2UA4nAdL69R7DFFUElOX1k3uDQVTiczKWjV2Wy_lFMzx4IEQJooRkkeJJ_3qBRcbQ7PNRugu2ltl9rDL21X1s"
-spotify_user_id = '1114332950'
-
-# from spotify_client import SpotifyClient
 
 def run():
+    # 0. Initialisation of Youtube and Spotify clients
+    youtube_client = YouTubeClient('client_secret_desktop.json')
+    # spotify_client = SpotifyClient(spotify_token, spotify_user_id)
+    spotify_client = SpotifyClient(spotify_user_id, spotify_scope, spotify_client_id, spotify_client_secret, spotify_redirect_url)
 
     # 1. Get a list of our Youtube playlists
-    youtube_client = YouTubeClient('client_secret_desktop.json')
-    spotify_client = SpotifyClient(spotify_token, spotify_user_id)
     playlists = youtube_client.get_playlists()
-
     for index, playlist in enumerate(playlists):
         print("{}: {}".format(index, playlist.title))
 
@@ -24,7 +25,6 @@ def run():
 
     # 3. Define the name of the Spotify playlist to create
     spotify_playlist_name = input("Define the name of the Spotify playlist to create: ") # Tracks from Youtube Playlists
-    print("You created a new Spotify playlist named '{}'".format(spotify_playlist_name))
 
     # 4. For each video in each playlist selected, get the track information from Youtube
     # and search the track in spotify thanks to its uri

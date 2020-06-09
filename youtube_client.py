@@ -1,12 +1,11 @@
 import os
-
 import google_auth_oauthlib.flow
 import googleapiclient.discovery
 import youtube_dl
 
 # Words to delete from the fetched title name from Youtube
 IGNORE = ['(', '[', ' x', ')', ']', '&', 'lyrics', 'lyric',
-          'video', 'official' '/', ' proximity', ' ft', '.', ' edit', ' feat', ' vs', ',']
+          'video', 'official', '/', ' proximity', ' ft', '.', ' edit', ' feat', ' vs', ',']
 
 
 class Playlist(object):
@@ -26,6 +25,7 @@ class Track(object):
 class YouTubeClient(object):
     def __init__(self, credentials_location):
         """Log into Youtube"""
+        print('\n Initialising Youtube Client...')
         # Disable OAuthlib's HTTPS verification when running locally.
         # *DO NOTE* leave this option enabled in production.
         os.environ["OAUTHLIB_INSECURE_TRANSPORT"] = "1"
@@ -45,6 +45,7 @@ class YouTubeClient(object):
         self.youtube_client = youtube_client
 
     def get_playlists(self):
+        """"Get A List Of Your Youtube Playlists"""
         request = self.youtube_client.playlists().list(
             part="id, snippet",
             maxResults=100,  # maximum number of playlists
@@ -58,6 +59,7 @@ class YouTubeClient(object):
         return playlists
 
     def get_music_videos_from_playlist(self, playlist_id):
+        """"Get The Artists and Track Names Of The Music Videos from A Youtube Playlists"""
         tracks = []
         request = self.youtube_client.playlistItems().list(
             playlistId=playlist_id,
